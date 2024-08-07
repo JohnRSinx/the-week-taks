@@ -9,7 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { TrashIcon } from "../ui/trashIcon";
 
 export function CardTask({ tasks }) {
   return (
@@ -19,7 +18,7 @@ export function CardTask({ tasks }) {
       </CardHeader>
       <CardContent>
         <ul className="space-y-2">
-          {tasks.backlog.map((task) => (
+          {tasks.map((task) => (
             <li
               key={task.id}
               className={`flex items-center justify-between ${
@@ -30,8 +29,8 @@ export function CardTask({ tasks }) {
                 <Checkbox
                   checked={task.completed}
                   onCheckedChange={() => {
-                    setSelectedTask(task);
-                    toggleTaskCompletion(task.id);
+                    // setSelectedTask(task);
+                    // toggleTaskCompletion(task.id);
                   }}
                 />
                 <span>{task.title}</span>
@@ -39,8 +38,8 @@ export function CardTask({ tasks }) {
               <div className="flex items-center gap-2">
                 <Select
                   onValueChange={(newDay) => {
-                    setSelectedTask(task);
-                    moveTask(newDay);
+                    // setSelectedTask(task);
+                    // moveTask(newDay);
                   }}
                   value={task.day}
                 >
@@ -60,12 +59,11 @@ export function CardTask({ tasks }) {
                   variant="ghost"
                   size="icon"
                   onClick={() => {
-                    setSelectedTask(task);
-                    deleteTask(task.id);
+                    // setSelectedTask(task);
+                    // deleteTask(task.id);
                   }}
                   className="hover:bg-red-500 hover:text-white rounded-full"
                 >
-                  {/* <TrashIcon className="w-4 h-4 hover:bg-secondary-foreground " /> */}
                   <Trash className="w-6 h-6 hover:bg-destructive p-1" />
                 </Button>
               </div>
