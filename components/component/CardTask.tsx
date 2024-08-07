@@ -10,7 +10,7 @@ import {
 } from "../ui/select";
 import { TrashIcon } from "../ui/trashIcon";
 
-export function CardTask({ tasks }: Array) {
+export function CardTask({ tasks }) {
   return (
     <Card>
       <CardHeader>
