@@ -1,5 +1,3 @@
-// src/api/tasks.js
-
 import { PrismaClient } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 

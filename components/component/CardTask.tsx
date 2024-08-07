@@ -1,3 +1,4 @@
+import { Trash } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Checkbox } from "../ui/checkbox";
@@ -64,7 +65,8 @@ export function CardTask({ tasks }) {
                   }}
                   className="hover:bg-red-500 hover:text-white rounded-full"
                 >
-                  <TrashIcon className="w-4 h-4" />
+                  {/* <TrashIcon className="w-4 h-4 hover:bg-secondary-foreground " /> */}
+                  <Trash className="w-6 h-6 hover:bg-destructive p-1" />
                 </Button>
               </div>
             </li>
