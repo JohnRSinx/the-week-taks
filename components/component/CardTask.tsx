@@ -9,8 +9,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Task } from "@/src/types/task";
+import { useTaskService } from "@/lib/useTaskService";
 
-export function CardTask({ tasks }) {
+interface CardTaskProps {
+  tasks: Task[];
+}
+
+export function CardTask({ tasks }: CardTaskProps) {
+  const { deleteTask, fetchTasks } = useTaskService();
+
+  function handleDeleteTask(id: number) {
+    deleteTask(id);
+    fetchTasks();
+  }
   return (
     <Card>
       <CardHeader>
@@ -22,12 +34,12 @@ export function CardTask({ tasks }) {
             <li
               key={task.id}
               className={`flex items-center justify-between ${
-                task.completed ? "line-through text-muted-foreground" : ""
+                task.isCompleted ? "line-through text-muted-foreground" : ""
               }`}
             >
               <div className="flex items-center gap-2">
                 <Checkbox
-                  checked={task.completed}
+                  checked={task.isCompleted}
                   onCheckedChange={() => {
                     // setSelectedTask(task);
                     // toggleTaskCompletion(task.id);
@@ -41,7 +53,7 @@ export function CardTask({ tasks }) {
                     // setSelectedTask(task);
                     // moveTask(newDay);
                   }}
-                  value={task.day}
+                  value={task.dayOfWeek}
                 >
                   <SelectTrigger className="h-8 px-2 text-sm">
                     <SelectValue />
@@ -64,7 +76,10 @@ export function CardTask({ tasks }) {
                   }}
                   className="hover:bg-red-500 hover:text-white rounded-full"
                 >
-                  <Trash className="w-6 h-6 hover:bg-destructive p-1" />
+                  <Trash
+                    className="w-6 h-6 hover:bg-destructive p-1"
+                    onClick={() => handleDeleteTask(task.id)}
+                  />
                 </Button>
               </div>
             </li>

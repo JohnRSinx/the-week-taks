@@ -1,27 +1,20 @@
-"use client";
-import { useState, useEffect } from "react";
+"use client"; // Adicione esta linha para garantir que este componente seja um Client Component
+
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CardTask } from "./CardTask";
 import { useTaskService } from "@/lib/useTaskService";
 
 export function Dashboard() {
-  const { tasks, fetchTasks, createTask } = useTaskService();
+  const { tasks, fetchTasks, createTask, loading, error } = useTaskService();
   const [newTaskTitle, setNewTaskTitle] = useState<string>("");
-
-  useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks]);
 
   const addNewTask = async () => {
     if (!newTaskTitle.trim()) return;
 
-    try {
-      await createTask({ title: newTaskTitle, dayOfWeek: "backlog" });
-      setNewTaskTitle("");
-    } catch (error) {
-      console.error("Erro ao criar tarefa:", error);
-    }
+    await createTask({ title: newTaskTitle, dayOfWeek: "backlog" });
+    setNewTaskTitle(""); // Limpa o campo de entrada
   };
 
   return (
@@ -37,11 +30,15 @@ export function Dashboard() {
           />
           <Button onClick={addNewTask}>Adicionar</Button>
         </div>
+        {loading && <div>Carregando tarefas...</div>}
+        {error && <div className="text-red-500">{error}</div>}
       </div>
       <div className="flex pt-4 gap-4">
-        {tasks.map((task) => (
-          <CardTask key={task.id} task={task} />
-        ))}
+        {tasks.length > 0 ? (
+          tasks.map((task) => <CardTask key={task.id} tasks={[task]} />)
+        ) : (
+          <div>Nenhuma tarefa disponível.</div>
+        )}
       </div>
     </div>
   );
