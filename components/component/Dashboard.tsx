@@ -7,7 +7,7 @@ import { CardTask } from "./CardTask";
 import { useTaskService } from "@/lib/useTaskService";
 
 export function Dashboard() {
-  const { tasks, fetchTasks, createTask, loading, error } = useTaskService();
+  const { tasks, createTask, loading, error } = useTaskService();
   const [newTaskTitle, setNewTaskTitle] = useState<string>("");
 
   const addNewTask = async () => {

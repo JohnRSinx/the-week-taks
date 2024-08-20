@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "./axiosInstance";
 import { Task } from "@/src/types/task";
 import { CreateTaskData } from "@/src/types/CreateTaskData";
+import { UpdateTaskData } from "@/src/types/UpdateTaskData";
 
 export const useTaskService = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -12,7 +13,7 @@ export const useTaskService = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get<Task[]>("/api/tasks");
+      const response = await axiosInstance.get<Task[]>("/tasks");
       setTasks(response.data);
     } catch (error) {
       console.error("Erro ao pegar tarefas:", error);
@@ -24,7 +25,7 @@ export const useTaskService = () => {
 
   const createTask = async (taskData: CreateTaskData): Promise<void> => {
     try {
-      const response = await axios.post<Task>("/api/tasks", taskData);
+      const response = await axiosInstance.post<Task>("/tasks", taskData);
       setTasks((prevTasks) => [...prevTasks, response.data]);
     } catch (error) {
       console.error("Erro ao criar tarefa:", error);
@@ -32,24 +33,18 @@ export const useTaskService = () => {
     }
   };
 
-  const deleteTask = async (id: number) => {
+  const updateTask = async (
+    taskId: string,
+    taskData: UpdateTaskData
+  ): Promise<void> => {
     try {
-      await axios.delete(`/api/tasks`, { data: { id } });
-      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
-    } catch (error) {
-      console.error("Erro ao deletar tarefa:", error);
-      setError("Erro ao deletar tarefa.");
-    }
-  };
-
-  const toggleTaskCompletion = async (id: number, isCompleted: boolean) => {
-    try {
-      const response = await axios.put(`/api/tasks`, { id, isCompleted });
+      const response = await axiosInstance.put<Task>(
+        `/tasks/${taskId}`,
+        taskData
+      );
       setTasks((prevTasks) =>
         prevTasks.map((task) =>
-          task.id === id
-            ? { ...task, isCompleted: response.data.isCompleted }
-            : task
+          task.id === taskId ? { ...task, ...response.data } : task
         )
       );
     } catch (error) {
@@ -58,33 +53,40 @@ export const useTaskService = () => {
     }
   };
 
-  const updateTaskDay = async (id: number, dayOfWeek: string) => {
+  const deleteTask = async (id: string) => {
     try {
-      const response = await axios.put(`/api/tasks`, { id, dayOfWeek });
-      setTasks((prevTasks) =>
-        prevTasks.map((task) =>
-          task.id === id
-            ? { ...task, dayOfWeek: response.data.dayOfWeek }
-            : task
-        )
-      );
+      await axiosInstance.delete(`/tasks/`, { data: { id } });
+      console.log(`Tarefa com ID ${id} deletada com sucesso.`); // Log para verificar a exclusão
+      fetchTasks();
+      console.log(tasks);
     } catch (error) {
-      console.error("Erro ao atualizar dia da tarefa:", error);
-      setError("Erro ao atualizar dia da tarefa.");
+      console.error("Erro ao deletar tarefa:", error);
+      setError("Erro ao deletar tarefa.");
+    }
+  };
+
+  const resetCompletedTasks = async (): Promise<void> => {
+    try {
+      await axiosInstance.patch("/tasks");
+      // Re-fetch tasks or update state accordingly as needed
+      fetchTasks();
+    } catch (error) {
+      console.error("Erro ao resetar tarefas completas:", error);
+      setError("Erro ao resetar tarefas completas.");
     }
   };
 
   useEffect(() => {
-    fetchTasks(); // Carregar tarefas ao montar o componente
+    fetchTasks();
   }, []);
 
   return {
     tasks,
     fetchTasks,
     createTask,
+    updateTask,
     deleteTask,
-    toggleTaskCompletion,
-    updateTaskDay,
+    resetCompletedTasks,
     loading,
     error,
   };

@@ -17,11 +17,10 @@ interface CardTaskProps {
 }
 
 export function CardTask({ tasks }: CardTaskProps) {
-  const { deleteTask, fetchTasks } = useTaskService();
+  const { deleteTask } = useTaskService();
 
-  function handleDeleteTask(id: number) {
+  function handleDeleteTask(id: string) {
     deleteTask(id);
-    fetchTasks();
   }
   return (
     <Card>
