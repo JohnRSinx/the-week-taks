@@ -15,6 +15,9 @@ export const useTaskService = () => {
     try {
       const response = await axiosInstance.get<Task[]>("/tasks");
       setTasks(response.data);
+      tasks.length > 0
+        ? setError(null)
+        : setError("Nenhuma tarefa disponível.");
     } catch (error) {
       console.error("Erro ao pegar tarefas:", error);
       setError("Erro ao carregar tarefas.");
@@ -27,6 +30,7 @@ export const useTaskService = () => {
     try {
       const response = await axiosInstance.post<Task>("/tasks", taskData);
       setTasks((prevTasks) => [...prevTasks, response.data]);
+      setError(null);
     } catch (error) {
       console.error("Erro ao criar tarefa:", error);
       setError("Erro ao criar tarefa.");

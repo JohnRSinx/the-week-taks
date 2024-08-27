@@ -1,4 +1,4 @@
-"use client"; // Adicione esta linha para garantir que este componente seja um Client Component
+"use client";
 
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
@@ -14,14 +14,14 @@ export function Dashboard() {
     if (!newTaskTitle.trim()) return;
 
     await createTask({ title: newTaskTitle, dayOfWeek: "backlog" });
-    setNewTaskTitle(""); // Limpa o campo de entrada
+    setNewTaskTitle("");
   };
 
   return (
     <div>
       <div className="flex flex-col gap-4 items-center">
         <h1 className="text-3xl text-center">Tarefas da Semana</h1>
-        <div className="flex gap-2 w-2/4 ">
+        <div className="flex gap-2">
           <Input
             value={newTaskTitle}
             onChange={(e) => setNewTaskTitle(e.target.value)}
@@ -37,7 +37,7 @@ export function Dashboard() {
         {tasks.length > 0 ? (
           tasks.map((task) => <CardTask key={task.id} tasks={[task]} />)
         ) : (
-          <div>Nenhuma tarefa disponível.</div>
+          <></>
         )}
       </div>
     </div>
